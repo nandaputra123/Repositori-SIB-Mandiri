@@ -1,0 +1,63 @@
+<script>
+    //input username dan password dari pengguna
+    let username = prompt("Enter your username (usernamen-nya = Nanda):"); //user
+    let password = prompt("Enter your password (password-nya = Nanda):"); //password
+
+    //memverifikasi username
+    if (username == "Nanda") {
+      //memverifikasi password
+    if (password == "Nanda") {
+        document.write(`<h3>Selamat datang ${username}<h3/>`);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////    
+        //data pegawai
+        let namaPegawai = "Nanda Putra Prasetyo"; //nama pegawai
+        let golongan = 2;         //golongan pegawai (1, 2, atau 3)
+        let sudahMenikah = true;  //status menikah pegawai (true jika sudah menikah, false jika belum menikah)
+    
+        let gajiPokok = 0;
+        let tunjangan = 0;
+    
+        //penggunaan switch case untuk menentukan gaji pokok berdasarkan gol
+        switch (golongan) {
+            case 1:
+                gajiPokok = 10000000;
+            break;
+            case 2:
+                gajiPokok = 15000000;
+            //jika gol 2 dan sudah menikah maka tambahkan tunjangan
+            if (sudahMenikah) {
+                tunjangan = 2000000;
+            }
+            break;
+            case 3:
+                gajiPokok = 20000000;
+            break;
+
+            default:
+            document.write("Golongan tidak valid.<br/>");
+            gajiPokok = 0;
+            tunjangan = 0;
+        }
+    
+        //menghitung gaji bersih
+        let gajiBersih = gajiPokok + tunjangan;
+    
+        //output hasil perhitungan
+        if (gajiPokok > 0) {
+            document.write(
+            "Nama pegawai: " + namaPegawai + "<br/>" +
+            "Golongan: " + golongan + "<br/>" +
+            "Status menikah: " + (sudahMenikah ? "Sudah menikah" : "Belum menikah") + "<br/>" +
+            "Gaji pokok: Rp" + gajiPokok + "<br/>" +
+            "Tunjangan: Rp" + tunjangan + "<br/>" +
+            "Gaji bersih: Rp" + gajiBersih + "<br/>"
+            );
+        }
+        
+        } else {
+        document.write(`<h2>username atau password anda salah</h2>`);
+        }
+    } else {
+        document.write("anda tidak memiliki akun");
+    }
+</script>
