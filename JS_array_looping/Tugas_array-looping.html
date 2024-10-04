@@ -13,7 +13,7 @@
         let s2 = {'nama': 'Putra', 'Nilai': 90};
         let s3 = {'nama': 'Prasetyo', 'Nilai': 65};
         let s4 = {'nama': 'Wibowo', 'Nilai': 45};
-        let s5 = {'nama': 'Nppw', 'Nilai': 25};
+        let s5 = {'nama': 'Nanyo', 'Nilai': 25};
         let siswa = [s1, s2, s3, s4, s5];
 
         //fungsi untuk memperoleh grade berdasarkan nilai
@@ -51,21 +51,23 @@
         document.write("<tbody>");
 
         //mengisi tabel dengan data siswa menggunakan loop
-        for (let index = 0; index < siswa.length; index++) {
-            let s = siswa[index];
+        let index = 1; //inisialisasi index untuk nomor urut
+        for (let s of siswa) {
             let grade = getGrade(s.Nilai);
             let predikat = getPredikat(grade);
             let keterangan = s.Nilai > 60 ? 'Lulus' : 'Tidak Lulus';
 
             //menulis baris data ke tabel
             document.write("<tr>");
-            document.write(`<td>${index + 1}</td>`);
+            document.write(`<td>${index}</td>`); // Gunakan index yang telah diinisialisasi
             document.write(`<td>${s.nama}</td>`);
             document.write(`<td>${s.Nilai}</td>`);
             document.write(`<td>${keterangan}</td>`);
             document.write(`<td>${grade}</td>`);
             document.write(`<td>${predikat}</td>`);
             document.write("</tr>");
+
+            index++; //increment index untuk nomor urut selanjutnya
         }
 
         document.write("</tbody>");
