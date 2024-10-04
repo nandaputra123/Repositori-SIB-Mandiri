@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Data Siswa</title>
+</head>
+<body>
+
+    <script>
+        //data siswa
+        let s1 = {'nama': 'Nanda', 'Nilai': 80};
+        let s2 = {'nama': 'Putra', 'Nilai': 90};
+        let s3 = {'nama': 'Prasetyo', 'Nilai': 65};
+        let s4 = {'nama': 'Wibowo', 'Nilai': 45};
+        let s5 = {'nama': 'Nppw', 'Nilai': 25};
+        let siswa = [s1, s2, s3, s4, s5];
+
+        //fungsi untuk memperoleh grade berdasarkan nilai
+        function getGrade(nilai) {
+            if (nilai >= 85) return 'A';
+            if (nilai >= 75) return 'B';
+            if (nilai >= 60) return 'C';
+            if (nilai >= 30) return 'D';
+            return 'E';
+        }
+
+        //fungsi untuk mendapatkan predikat berdasarkan grade
+        function getPredikat(grade) {
+            switch (grade) {
+                case 'A': return 'Sangat Baik';
+                case 'B': return 'Baik';
+                case 'C': return 'Cukup';
+                case 'D': return 'Kurang';
+                case 'E': return 'Sangat Kurang';
+            }
+        }
+
+        //membuat tabel
+        document.write("<table border='3'>");
+        document.write("<thead>");
+        document.write("<tr>");
+        document.write("<th>No</th>");
+        document.write("<th>Nama</th>");
+        document.write("<th>Nilai</th>");
+        document.write("<th>Keterangan</th>");
+        document.write("<th>Grade</th>");
+        document.write("<th>Predikat</th>");
+        document.write("</tr>");
+        document.write("</thead>");
+        document.write("<tbody>");
+
+        //mengisi tabel dengan data siswa menggunakan loop
+        for (let index = 0; index < siswa.length; index++) {
+            let s = siswa[index];
+            let grade = getGrade(s.Nilai);
+            let predikat = getPredikat(grade);
+            let keterangan = s.Nilai > 60 ? 'Lulus' : 'Tidak Lulus';
+
+            //menulis baris data ke tabel
+            document.write("<tr>");
+            document.write(`<td>${index + 1}</td>`);
+            document.write(`<td>${s.nama}</td>`);
+            document.write(`<td>${s.Nilai}</td>`);
+            document.write(`<td>${keterangan}</td>`);
+            document.write(`<td>${grade}</td>`);
+            document.write(`<td>${predikat}</td>`);
+            document.write("</tr>");
+        }
+
+        document.write("</tbody>");
+        document.write("</table>");
+    </script>
+
+</body>
+</html>
