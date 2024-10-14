@@ -1,0 +1,193 @@
+C:\Users\nanda putra>cd \xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 9
+Server version: 10.4.28-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+```````````````````````````````````` Menampilkan Semua Databases ````````````````````````````````
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| classicmodels      |
+| db_movieapp        |
+| dblatihan          |
+| dbtoko             |
+| dbtransaksi        |
+| dbwebanime         |
+| financial_dw       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| sib7               |
+| soal4_0110222069   |
+| test               |
++--------------------+
+14 rows in set (0.008 sec)
+
+```````````````````````````````````````````` Penggunaan Databases sib7 ````````````````````````````````````````````````
+MariaDB [(none)]> USE sib7;
+Database changed
+
+
+````````````````````````````````````````````` Membuat Tabel vendor ```````````````````````````````````````````
+MariaDB [sib7]> CREATE TABLE vendor (
+    -> id INT PRIMARY KEY AUTO_INCREMENT,
+    -> nomor VARCHAR(15) NOT NULL,
+    -> nama VARCHAR(50) NOT NULL,
+    -> kode VARCHAR(15) NOT NULL UNIQUE,
+    -> alamat TEXT NOT NULL,
+    -> kontak VARCHAR(20));
+Query OK, 0 rows affected (0.141 sec)
+
+
+````````````````````````````````````````````` Membuat Tabel produk `````````````````````````````````````````````
+MariaDB [sib7]> CREATE TABLE produk_tugas2(
+    -> id INT PRIMARY KEY AUTO_INCREMENT,
+    -> nama VARCHAR(50) NOT NULL,
+    -> harga DECIMAL(15,3) NOT NULL);
+Query OK, 0 rows affected (0.099 sec)
+
+
+```````````````````````````````````````````````Membuat Tabel pembelian ```````````````````````````````````````````
+MariaDB [sib7]> CREATE TABLE pemebelian (
+    -> id INT PRIMARY KEY AUTO_INCREMENT,
+    -> tanggal DATE NOT NULL,
+    -> nomor VARCHAR(15) NOT NULL,
+    -> produk_id INT NOT NULL,
+    -> jumlah INT NOT NULL,
+    -> harga DECIMAL(15,3) NOT NULL,
+    -> vendor_id INT NOT NULL,
+    -> FOREIGN KEY (produk_id) REFERENCES produk(id),
+    -> FOREIGN KEY (vendor_id) REFERENCES vendor(id));
+Query OK, 0 rows affected (0.060 sec)
+
+
+
+``````````````````````````````````````````````` Menambahkan Data ke Tabel vendor `````````````````````````````````
+MariaDB [sib7]> INSERT INTO vendor (nomor, nama, kode, alamat, kontak) VALUES
+    -> ('vnr001', 'PT. Jaya Prasetyo', 'JP001', 'Jl. Merdeka No. 10, Jakarta', '021-123456'),
+    -> ('vnr002', 'PT. Wibowo Teknik', 'WT002', 'Jl. Karya No. 25, Bandung', '022-987654'),
+    -> ('vnr003', 'PT. Nanda Sejahtera', 'NS003', 'Jl. Proklamasi No. 15, Surabaya', '031-112233'),
+    -> ('vnr004', 'PT. Cahaya Putra', 'CP004', 'Jl. Sudirman No. 50, Medan', '061-778899'),
+    -> ('vnr005', 'PT. Tio Inovasi', 'TI005', 'Jl. Diponegoro No. 7, Semarang', '024-556677');
+Query OK, 5 rows affected (0.052 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+``````````````````````````````````````````````````````` Menambahkan Data ke Tabel produk ``````````````````````````````
+MariaDB [sib7]> INSERT INTO produk (nama, harga) VALUES
+    -> ('Meja Kantor', 7500000.00),
+    -> ('LCD 55WT', 3500000.00),
+    -> ('Printer', 1500000.00),
+    -> ('Kabel CP04', 1200000.00),
+    -> ('Mouse', 200000.00);
+Query OK, 5 rows affected, 2 warnings (0.054 sec)
+Records: 5  Duplicates: 0  Warnings: 2
+
+````````````````````````````````````````````````````` Menambahkan Data ke Tabel pembelian ```````````````````````````````
+MariaDB [sib7]> INSERT INTO pemebelian (tanggal, nomor, produk_id, jumlah, harga, vendor_id) VALUES
+    -> ('2024-10-01', 'JP001', 1, 10, 75000000.00, 1),
+    -> ('2024-10-02', 'WT002', 2, 20, 70000000.00, 2),
+    -> ('2024-10-03', 'NS003', 3, 5, 7500000.00, 3),
+    -> ('2024-10-04', 'CP004', 4, 15, 18000000.00, 4),
+    -> ('2024-10-05', 'TI005', 5, 50, 10000000.00, 5);
+Query OK, 5 rows affected (0.046 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+///////////////////////////////////////////////////----HASIL INPUT----//////////////////////////////////////////////////////////
+
+================================ Perintah berikut untuk melihat semua database yang tersedia ==================================
+MariaDB [sib7]> SHOW tables;
++----------------+
+| Tables_in_sib7 |
++----------------+
+| jenis          |
+| pemebelian     |
+| produk         |
+| produk_tugas2  |
+| vendor         |
++----------------+
+5 rows in set (0.042 sec)
+
+
+================================ Menampilkan Data dari Tabel Vendor ============================================================
+MariaDB [sib7]> SELECT * FROM vendor;
++----+--------+---------------------+-------+---------------------------------+------------+
+| id | nomor  | nama                | kode  | alamat
+         | kontak     |
++----+--------+---------------------+-------+---------------------------------+------------+
+|  1 | vnr001 | PT. Jaya Prasetyo   | JP001 | Jl. Merdeka No. 10, Jakarta     | 021-123456 |
+|  2 | vnr002 | PT. Wibowo Teknik   | WT002 | Jl. Karya No. 25, Bandung       | 022-987654 |
+|  3 | vnr003 | PT. Nanda Sejahtera | NS003 | Jl. Proklamasi No. 15, Surabaya | 031-112233 |
+|  4 | vnr004 | PT. Cahaya Putra    | CP004 | Jl. Sudirman No. 50, Medan      | 061-778899 |
+|  5 | vnr005 | PT. Tio Inovasi     | TI005 | Jl. Diponegoro No. 7, Semarang  | 024-556677 |
++----+--------+---------------------+-------+---------------------------------+------------+
+5 rows in set (0.021 sec)
+
+================================= Menampilkan Data dari Tabel produk_tugas2 ===================================================
+MariaDB [sib7]> SELECT * FROM produk_tugas2;
++----+-------------+-------------+
+| id | nama        | harga       |
++----+-------------+-------------+
+|  1 | Meja Kantor | 7500000.000 |
+|  2 | LCD 55WT    | 3500000.000 |
+|  3 | Printer     | 1500000.000 |
+|  4 | Kabel CP04  | 1200000.000 |
+|  5 | Mouse       |  200000.000 |
++----+-------------+-------------+
+5 rows in set (0.004 sec)
+
+===================================== Menampilkan Data dari Tabel pemebelian ====================================================
+MariaDB [sib7]> SELECT * FROM pemebelian;
++----+------------+-------+-----------+--------+--------------+-----------+
+| id | tanggal    | nomor | produk_id | jumlah | harga        | vendor_id |
++----+------------+-------+-----------+--------+--------------+-----------+
+|  1 | 2024-10-01 | JP001 |         1 |     10 | 75000000.000 |         1 |
+|  2 | 2024-10-02 | WT002 |         2 |     20 | 70000000.000 |         2 |
+|  3 | 2024-10-03 | NS003 |         3 |      5 |  7500000.000 |         3 |
+|  4 | 2024-10-04 | CP004 |         4 |     15 | 18000000.000 |         4 |
+|  5 | 2024-10-05 | TI005 |         5 |     50 | 10000000.000 |         5 |
++----+------------+-------+-----------+--------+--------------+-----------+
+5 rows in set (0.006 sec)
+
+
+==================Perintah SQL untuk Menampilkan Data Gabungan dengan Isi Produk dari produk_tugas2 ================================
+
+MariaDB [sib7]> SELECT
+    ->     pemebelian.nomor,
+    ->     pemebelian.tanggal,
+    ->     produk_tugas2.nama AS produk,
+    ->     pemebelian.jumlah,
+    ->     pemebelian.harga,
+    ->     vendor.nama AS vendor
+    -> FROM
+    ->     pemebelian
+    -> JOIN
+    ->     produk_tugas2 ON pemebelian.produk_id = produk_tugas2.id
+    -> JOIN
+    ->     vendor ON pemebelian.vendor_id = vendor.id;
++-------+------------+-------------+--------+--------------+---------------------+
+| nomor | tanggal    | produk      | jumlah | harga        | vendor
+     |
++-------+------------+-------------+--------+--------------+---------------------+
+| JP001 | 2024-10-01 | Meja Kantor |     10 | 75000000.000 | PT. Jaya Prasetyo   |
+| WT002 | 2024-10-02 | LCD 55WT    |     20 | 70000000.000 | PT. Wibowo Teknik   |
+| NS003 | 2024-10-03 | Printer     |      5 |  7500000.000 | PT. Nanda Sejahtera |
+| CP004 | 2024-10-04 | Kabel CP04  |     15 | 18000000.000 | PT. Cahaya Putra    |
+| TI005 | 2024-10-05 | Mouse       |     50 | 10000000.000 | PT. Tio Inovasi     |
++-------+------------+-------------+--------+--------------+---------------------+
+5 rows in set (0.008 sec)
+
+MariaDB [sib7]>
+
+
+
+
