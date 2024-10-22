@@ -1,0 +1,226 @@
+Transaction, Stored Procedures dan Stored Functions
+Worksheet 6
+
+Nama	: Nanda Putra Prasetyo 
+
+///////////////////////////////////////////////////////////////////////////////// SOAL 6.1 /////////////////////////////////////////////////////////////////////////////////////////////////
+Microsoft Windows [Version 10.0.22631.4317]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\nanda putra>cd C:\xampp\mysql\bin
+
+C:\xampp\mysql\bin>mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.4.28-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> USE dbpossi02
+Database changed
+
+/////////// 1).
+
+MariaDB [dbpossi02]> DELIMITER $$
+MariaDB [dbpossi02]>
+MariaDB [dbpossi02]> CREATE PROCEDURE pro_naikan_harga(
+    -> IN jenis_produk INT,          -- Parameter untuk jenis produk ID
+    -> IN persentase_kenaikan INT)    -- Parameter untuk persentase kenaikan harga
+    -> BEGIN
+    ->     -- Update harga_jual dengan menambahkan persentase kenaikan harga
+    -> UPDATE produk
+    -> SET harga_jual = harga_jual + (harga_jual * persentase_kenaikan / 100)
+    -> WHERE jenis_produk_id = jenis_produk;  -- Kondisi untuk produk dengan jenis_produk_id yang sesuai
+    -> END $$
+Query OK, 0 rows affected (0.006 sec)
+
+MariaDB [dbpossi02]>
+MariaDB [dbpossi02]> DELIMITER ;
+MariaDB [dbpossi02]> CALL pro_naikan_harga(1, 4); -- Pemanggilan Procedure
+Query OK, 3 rows affected (0.013 sec)
+
+MariaDB [dbpossi02]> SELECT * FROM produk WHERE jenis_produk_id = 1; --memeriksa perubahan harga dengan perintah SELECT
++----+------+------------------+------------+------------+------+----------+-----------------+
+| id | kode | nama             | harga_beli | harga_jual | stok | min_stok | jenis_produk_id |
++----+------+------------------+------------+------------+------+----------+-----------------+
+|  1 | TV01 | Televisi 21 inch |    3500000 |    5451264 | NULL |        2 |               1 |
+|  2 | TV02 | Televisi 40 inch |    5500000 |    8047104 |    5 |        2 |               1 |
+|  3 | K001 | Kulkas 2 pintu   |    3500000 |    5061888 |    0 |        2 |               1 |
++----+------+------------------+------------+------------+------+----------+-----------------+
+3 rows in set (0.004 sec)
+
+///////// 2).
+MariaDB [dbpossi02]> DELIMITER $$
+MariaDB [dbpossi02]>
+MariaDB [dbpossi02]> CREATE FUNCTION umur(tgl_lahir DATE)
+    -> RETURNS INT
+    -> DETERMINISTIC
+    -> BEGIN
+    -> DECLARE calculated_age INT;
+    ->
+    ->     -- Menghitung umur berdasarkan perbedaan tahun sekarang dengan tahun lahir
+    -> SET calculated_age = YEAR(CURDATE()) - YEAR(tgl_lahir);
+    ->
+    ->     -- Mengurangi umur jika bulan dan hari lahir belum tercapai dalam tahun ini
+    ->     IF (MONTH(CURDATE()) < MONTH(tgl_lahir)) OR (MONTH(CURDATE()) = MONTH(tgl_lahir) AND DAY(CURDATE()) < DAY(tgl_lahir)) THEN
+    -> SET calculated_age = calculated_age - 1;
+    -> END IF;
+    ->
+    -> RETURN calculated_age;
+    -> END $$
+Query OK, 0 rows affected (0.010 sec)
+
+MariaDB [dbpossi02]>
+MariaDB [dbpossi02]> DELIMITER ;
+MariaDB [dbpossi02]> SELECT nama, umur(tgl_lahir) AS umur FROM pelanggan; -- Penggunaan untuk menghitung umur dari tabel pelanggan.
++---------------+------+
+| nama          | umur |
++---------------+------+
+| Agung Sedayu  |   14 |
+| Pandan Wangi  |   74 |
+| Sekar Mirah   |   41 |
+| Swandaru Geni |   43 |
+| Pradabashu    |   39 |
+| Gayatri Dwi   |   36 |
+| Dewi Gyat     |   35 |
+| Andre Haru    |   34 |
+| Ahmad Hasan   |   32 |
+| Cassanndra    |   33 |
++---------------+------+
+10 rows in set (0.026 sec)
+
+///////// 3).
+MariaDB [dbpossi02]> DELIMITER $$
+MariaDB [dbpossi02]>
+MariaDB [dbpossi02]> CREATE FUNCTION kategori_harga(harga DOUBLE)
+    -> RETURNS VARCHAR(20)
+    -> DETERMINISTIC
+    -> BEGIN
+    ->     DECLARE kategori VARCHAR(20);
+    ->
+    ->     -- Memeriksa rentang harga dan menentukan kategori
+    -> IF harga >= 0 AND harga <= 500000 THEN
+    ->   SET kategori = 'murah';
+    -> ELSEIF harga > 500000 AND harga <= 3000000 THEN
+    ->   SET kategori = 'sedang';
+    -> ELSEIF harga > 3000000 AND harga <= 10000000 THEN
+    ->   SET kategori = 'mahal';
+    -> ELSEIF harga > 10000000 THEN
+    ->   SET kategori = 'sangat mahal';
+    -> ELSE
+    ->   SET kategori = 'Harga tidak valid';
+    -> END IF;
+    ->
+    -> RETURN kategori;
+    -> END $$
+Query OK, 0 rows affected (0.007 sec)
+-- Memanggil fungsi ini dalam query SQL untuk menentukan kategori harga dari suatu produk. 
+MariaDB [dbpossi02]> SELECT nama, harga_jual, kategori_harga(harga_jual) AS kategori
+    -> FROM produk;
++------------------+------------+--------------+
+| nama             | harga_jual | kategori     |
++------------------+------------+--------------+
+| Televisi 21 inch |    5451264 | mahal        |
+| Televisi 40 inch |    8047104 | mahal        |
+| Kulkas 2 pintu   |    5061888 | mahal        |
+| Meja Makan       |     726000 | sedang       |
+| Teh Kotak        |       4235 | murah        |
+| PC Desktop HP    |    9600000 | mahal        |
+| Teh Botol        |       3025 | murah        |
+| Notebook Acer    |   10800000 | sangat mahal |
+| Notebook Lenovo  |   12000000 | sangat mahal |
++------------------+------------+--------------+
+9 rows in set (0.002 sec)
+
+MariaDB [dbpossi02]> START TRANSACTION;
+Query OK, 0 rows affected (0.001 sec)
+
+///////////////////////////////////////////////////////////// SOAL 5.2 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////// 1).
+1.	Buatlah sebuah transaction dengan skenario-skenario statement sebagai berikut:
+●	Mulai transaction
+●	Insert data produk sebanyak 3 record
+●	Update data stok salah satu produk
+●	Buat savepoint
+●	Hapus salah satu data pembayaran
+●	Kembali ke savepoint
+●	Update data iuran salah satu kartu
+●	Akhiri transaction dengan commit
+
+--transaction
+MariaDB [dbpossi02]> START TRANSACTION;
+Query OK, 0 rows affected (0.001 sec)
+
+-- Insert data produk sebanyak 3 record
+MariaDB [dbpossi02]> INSERT INTO produk (kode, nama, harga_beli, harga_jual, stok, min_stok, jenis_produk_id)
+    -> VALUES
+    -> ('PRD001', 'Produk A', 10000, 15000, 50, 10, 1),
+    -> ('PRD002', 'Produk B', 20000, 25000, 30, 5, 2),
+    -> ('PRD003', 'Produk C', 30000, 35000, 20, 8, 1);
+Query OK, 3 rows affected (0.012 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+-- Update data stok salah satu produk (misalnya, stok Produk A menjadi 60)
+MariaDB [dbpossi02]> UPDATE produk
+    -> SET stok = 60
+    -> WHERE kode = 'PRD001';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+-- savepoint
+MariaDB [dbpossi02]> SAVEPOINT before_delete_payment;
+Query OK, 0 rows affected (0.000 sec)
+
+-- DELETE FROM pembayaran: Menghapus salah satu record di tabel pembayaran. (Pastikan tabel pembayaran ada dan id 5 sesuai.)
+MariaDB [dbpossi02]> DELETE FROM pembayaran
+    -> WHERE id = 5;
+Query OK, 1 row affected (0.036 sec)
+-- ROLLBACK TO before_delete_payment: Membatalkan penghapusan yang dilakukan sebelumnya dan mengembalikan transaksi ke kondisi di saat SAVEPOINT dibuat.
+MariaDB [dbpossi02]> ROLLBACK TO before_delete_payment;
+Query OK, 0 rows affected (0.003 sec)
+
+-- UPDATE kartu: Mengupdate data iuran pada salah satu kartu di tabel kartu.
+MariaDB [dbpossi02]> UPDATE kartu
+    -> SET iuran = 50000
+    -> WHERE id = 2;
+Query OK, 1 row affected (0.010 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+-- Mengakhiri transaksi dan menyimpan semua perubahan yang dilakukan selama transaksi berlangsung.
+MariaDB [dbpossi02]> COMMIT;
+Query OK, 0 rows affected (0.004 sec)
+
+-- Melihat Data Produk yang Ditambahkan dan Diubah
+MariaDB [dbpossi02]> SELECT * FROM produk WHERE kode IN ('PRD001', 'PRD002', 'PRD003');
++----+--------+----------+------------+------------+------+----------+-----------------+
+| id | kode   | nama     | harga_beli | harga_jual | stok | min_stok | jenis_produk_id |
++----+--------+----------+------------+------------+------+----------+-----------------+
+| 11 | PRD001 | Produk A |      10000 |      15000 |   60 |       10 |               1 |
+| 12 | PRD002 | Produk B |      20000 |      25000 |   30 |        5 |               2 |
+| 13 | PRD003 | Produk C |      30000 |      35000 |   20 |        8 |               1 |
++----+--------+----------+------------+------------+------+----------+-----------------+
+3 rows in set (0.006 sec)
+
+-- Memeriksa Data Pembayaran
+MariaDB [dbpossi02]> SELECT * FROM pembayaran WHERE id = 5;
++----+------------+------------+--------+------+------------+-------------------+
+| id | nokuitansi | tanggal    | jumlah | ke   | pesanan_id | status_pembayaran |
++----+------------+------------+--------+------+------------+-------------------+
+|  5 | M0012      | 2023-06-12 |  19000 |    1 |         11 | NULL              |
++----+------------+------------+--------+------+------------+-------------------+
+1 row in set (0.001 sec)
+
+-- emeriksa Data Iuran pada Tabel Kartu
+MariaDB [dbpossi02]> SELECT * FROM kartu WHERE id = 2;
++----+------+---------------+--------+-------+
+| id | kode | nama          | diskon | iuran |
++----+------+---------------+--------+-------+
+|  2 | PLAT | Platinum Jaya |    0.1 | 50000 |
++----+------+---------------+--------+-------+
+1 row in set (0.003 sec)
+
+MariaDB [dbpossi02]>
