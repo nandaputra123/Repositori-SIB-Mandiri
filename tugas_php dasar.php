@@ -22,9 +22,9 @@ function sapaan($nama = "Tamu", $waktu = null) {
 }
 
 //contoh pemanggilan fungsi dengan newline setelah setiap output
-echo sapaan() . "\n";               // Output: Halo, Tamu! Selamat datang!
-echo sapaan("Nanda") . "\n";         // Output: Halo, Nanda! Selamat datang!
-echo sapaan("Nanda", "pagi") . "\n"; // Output: Selamat pagi, Nanda! Semoga harimu penuh semangat dan produktif.
-echo sapaan("Putra", "siang") . "\n";// Output: Selamat siang, Putra! Jangan lupa istirahat sejenak dan makan siang.
-echo sapaan("Prasetyo", "malam") . "\n";// Output: Selamat malam, Prasetyo! Semoga istirahatmu tenang dan mimpi indah.
+echo sapaan() . "\n";               //output: Halo, Tamu! Selamat datang!
+echo sapaan("Nanda") . "\n";         //output: Halo, Nanda! Selamat datang!
+echo sapaan("Nanda", "pagi") . "\n"; //output: Selamat pagi, Nanda! Semoga harimu penuh semangat dan produktif.
+echo sapaan("Putra", "siang") . "\n";//output: Selamat siang, Putra! Jangan lupa istirahat sejenak dan makan siang.
+echo sapaan("Prasetyo", "malam") . "\n";//utput: Selamat malam, Prasetyo! Semoga istirahatmu tenang dan mimpi indah.
 ?>
