@@ -23,12 +23,8 @@ class Buku {
         return $this->tahunTerbit;
     }
 
-    public function setTahunTerbit($tahunTerbit) {
-        $this->tahunTerbit = $tahunTerbit;
-    }
-
     public function infoBuku() {
-        return "Judul: {$this->judul}, Penulis: {$this->penulis}, Tahun Terbit: {$this->tahunTerbit}";
+        return "Judul: {$this->judul}\nPenulis: {$this->penulis}\nTahun Terbit: {$this->tahunTerbit}\n";
     }
 }
 
@@ -42,33 +38,42 @@ class BukuDigital extends Buku {
         $this->formatFile = $formatFile;
     }
 
-    public function getUkuranFile() {
-        return $this->ukuranFile;
-    }
-
-    public function setUkuranFile($ukuranFile) {
-        $this->ukuranFile = $ukuranFile;
-    }
-
-    public function getFormatFile() {
-        return $this->formatFile;
-    }
-
-    public function setFormatFile($formatFile) {
-        $this->formatFile = $formatFile;
-    }
-
     public function infoBuku() {
         $info = parent::infoBuku();
-        $info .= ", Ukuran File: {$this->ukuranFile} MB, Format File: {$this->formatFile}";
+        $info .= "Ukuran File: {$this->ukuranFile} MB\nFormat File: {$this->formatFile}\n";
         return $info;
     }
 }
 
-//contoh penggunaan
-$bukuCetak = new Buku("Laskar Pelangi", "Andrea Hirata", 2005);
-echo $bukuCetak->infoBuku() . PHP_EOL;
+// Daftar buku cetak dan digital
+$daftarBuku = [
+    new Buku("Laskar Pelangi", "Andrea Hirata", 2005),
+    new Buku("Bumi Manusia", "Pramoedya Ananta Toer", 1980),
+    new Buku("Negeri 5 Menara", "Ahmad Fuadi", 2009),
+    new Buku("Supernova: Ksatria, Puteri, dan Bintang Jatuh", "Dewi Lestari", 2001),
+    new Buku("Sepatu Dahlan", "Khrisna Pabichara", 2012),
+];
 
-$bukuDigital = new BukuDigital("Laskar Pelangi", "Andrea Hirata", 2005, 3, "ePub");
-echo $bukuDigital->infoBuku() . PHP_EOL;
+$daftarBukuDigital = [
+    new BukuDigital("Laskar Pelangi", "Andrea Hirata", 2005, 3, "ePub"),
+    new BukuDigital("Bumi Manusia", "Pramoedya Ananta Toer", 1980, 5, "PDF"),
+    new BukuDigital("Negeri 5 Menara", "Ahmad Fuadi", 2009, 2, "ePub"),
+    new BukuDigital("Supernova: Ksatria, Puteri, dan Bintang Jatuh", "Dewi Lestari", 2001, 4, "Mobi"),
+    new BukuDigital("Sepatu Dahlan", "Khrisna Pabichara", 2012, 2, "PDF"),
+];
+
+// Menampilkan informasi semua buku cetak
+echo "Informasi Buku Cetak:\n";
+foreach ($daftarBuku as $buku) {
+    echo $buku->infoBuku();
+}
+
+echo "\n";
+
+// Menampilkan informasi semua buku digital
+echo "Informasi Buku Digital:\n";
+foreach ($daftarBukuDigital as $bukuDigital) {
+    echo $bukuDigital->infoBuku();
+}
+
 ?>
